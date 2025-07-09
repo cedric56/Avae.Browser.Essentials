@@ -22,9 +22,6 @@ How to use
 In the main.js add export
 ```
 export const dotnetRuntime = await dotnet
-    .withModuleConfig({
-        main: { callServiceWorker }
-    })
     .withDiagnosticTracing(true)
     .withApplicationArgumentsFromQuery()
     .create();
