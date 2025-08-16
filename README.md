@@ -143,7 +143,7 @@ Avae.Browser.Essentials is licensed under the MIT License.
 
 # Contributing
 
-Contributions are welcome! Please submit issues or pull requests to the GitHub repository. Ensure your code follows the project’s coding standards and includes appropriate tests.
+Contributions are welcome! Please submit issues or pull requests to the GitHub repository. Ensure your code follows the project’s coding standards.
 
 # Acknowledgments
 
