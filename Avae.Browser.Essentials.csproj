@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-browser;</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <PackageId>Avae.Browser.Essentials</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>Licence.md</PackageLicenseFile>
+    <AssemblyName>Microsoft.Maui.Essentials</AssemblyName>
+    <RootNamespace>Microsoft.Maui.Essentials</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="**\*.shared.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Include="**\*.shared.*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetPlatformIdentifier)' == 'browser' ">
+    <Compile Include="**\*.browser.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Include="**\*.browser.*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AvaloniaInterop.cs" />
+    <Compile Include="JSInitialize.cs" />
+    <Compile Include="JSInterop.cs" />
+  </ItemGroup>
+
+  <ItemGroup Label="FilesToCopy">
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="Licence.md" Pack="true" PackagePath="" />
+    <Content Include="build\Avae.Browser.Essentials.targets" PackagePath="build\Avae.Browser.Essentials.targets" />
+    <Content Include="essentials.js" Pack="true" PackagePath="content\js\">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+</ItemGroup>   
+</Project>

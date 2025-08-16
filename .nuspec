@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Avae.Browser.Essentials</id>
+    <version>1.0.0</version>
+    <title>Avae Browser Essentials</title>
+    <authors>cedric56</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Add maui essentials functionalities</description>
+    <summary>Maui essentials for the web</summary>
+    <releaseNotes>Initial release of browser essentials package</releaseNotes>
+    <copyright>Copyright (c) .NET Foundation and Contributors</copyright>
+    <license type="expression">MIT</license>
+
+    <dependencies>
+      <group targetFramework="net8.0" />
+    </dependencies>
+  </metadata>
+
+  <files>
+    <!-- README file -->
+    <file src="README.md" target="" />
+    
+    <!-- JavaScript content -->
+    <file src="content\js\essentials.js" target="content\js" />
+    
+    <!-- Build targets -->
+    <file src="build\Avae.Browser.Essentials.targets" target="build" />
+  </files>
+</package>

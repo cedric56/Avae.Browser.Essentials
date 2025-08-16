@@ -1,0 +1,33 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- Define the package content path relative to the .targets file location -->
+    <_EssentialsJSPath>$(MSBuildThisFileDirectory)..\content\js\essentials.js</_EssentialsJSPath>
+  </PropertyGroup>
+
+  <Target Name="CopyEssentialsJS" BeforeTargets="Build">
+    <!-- Ensure wwwroot exists -->
+    <MakeDir Directories="$(MSBuildProjectDirectory)\wwwroot"
+             Condition="!Exists('$(MSBuildProjectDirectory)\wwwroot')" />
+
+    <!-- Copy with full path verification -->
+    <Copy SourceFiles="$(_EssentialsJSPath)"
+          DestinationFiles="$(MSBuildProjectDirectory)\wwwroot\essentials.js"
+          Condition="Exists('$(_EssentialsJSPath)')"
+          SkipUnchangedFiles="true">
+      <Output TaskParameter="CopiedFiles" ItemName="FilesCopied" />
+    </Copy>
+
+    <!-- Error if file wasn't found -->
+    <Error Text="essentials.js not found at $(_EssentialsJSPath)"
+           Condition="!Exists('$(_EssentialsJSPath)')" />
+  </Target>
+</Project>
+<!--<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <JSFiles Include="essentials.js" />
+  </ItemGroup>
+  <Target Name="CopyLogFiles" BeforeTargets="Build">
+    <Copy SourceFiles="@(JSFiles)" 
+          DestinationFolder="$(MSBuildProjectDirectory)wwwroot\" />
+  </Target>
+</Project>-->
