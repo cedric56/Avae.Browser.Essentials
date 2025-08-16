@@ -148,4 +148,5 @@ Contributions are welcome! Please submit issues or pull requests to the GitHub r
 # Acknowledgments
 
 Thanks to the Avalonia community for their robust UI framework.
+
 Gratitude to the MAUI team for providing cross-platform essentials.
