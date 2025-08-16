@@ -20,8 +20,6 @@ Follow these steps to integrate Avae.Browser.Essentials into your Avalonia.Brows
 
 An Avalonia.Browser project set up with .NET.
 
-Basic understanding of Avalonia UI and browser-based application deployment.
-
 # Installation
 
 1. Add Microsoft.Maui.Essentials to Your Shared Project
