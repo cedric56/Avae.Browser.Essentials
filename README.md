@@ -132,7 +132,9 @@ string appVersion = AppInfo.VersionString; // Retrieves "1.2.3"
 This package builds upon the excellent work of:
 
 Microsoft.Maui.Essentials
+
 AvaloniaUI
+
 BlazorBrowserDetect
 
 # License
