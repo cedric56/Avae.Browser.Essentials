@@ -50,7 +50,7 @@ private static Task Main(string[] args) => BuildAvaloniaApp()
     .WithInterFont()
     .StartBrowserAppAsync("out").ContinueWith(async t =>
     {
-        await JSInitialize.Initialize();
+        await Microsoft.Maui.ApplicationModel.Platform.Initialize();
     });
 ````
 

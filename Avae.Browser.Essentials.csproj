@@ -6,6 +6,13 @@
     <Nullable>enable</Nullable>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <PackageId>Avae.Browser.Essentials</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>cedricb</Authors>
+    <Product>Avae.macOS.Essentials</Product>
+    <Description>Portage of Microsoft.Maui.Essentials for browser</Description>
+    <PackageTags>maui;avalonia;essentials;crossplatform</PackageTags>
+    <RepositoryUrl>https://github.com/cedric56/Avae.Browser.Essentials</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/cedric56/Avae.Browser.Essentials</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>Licence.md</PackageLicenseFile>
     <AssemblyName>Microsoft.Maui.Essentials</AssemblyName>
@@ -27,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AvaloniaInterop.cs" />
-    <Compile Include="JSInitialize.cs" />
     <Compile Include="JSInterop.cs" />
   </ItemGroup>
 

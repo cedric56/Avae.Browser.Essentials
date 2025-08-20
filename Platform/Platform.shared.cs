@@ -2,11 +2,13 @@
 using Microsoft.Maui.Networking;
 using System.Runtime.InteropServices.JavaScript;
 
-namespace Microsoft.Maui.Essentials
+namespace Microsoft.Maui.ApplicationModel
 {
-    public static partial class JSInitialize
+    /// <summary>
+    /// A static class that contains platform-specific helper methods.
+    /// </summary>
+    public static class Platform
     {
-
         public static async Task Initialize()
         {
             await JSHost.ImportAsync("essentials", "/essentials.js");
