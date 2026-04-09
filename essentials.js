@@ -428,7 +428,10 @@ export const connectivityInterop = {
     },
     getConnectionType: function () {
         var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        return connection.type ?? connection.effectiveType;
+        if (connection) {
+            return connection.type ?? connection.effectiveType;
+        }
+        return null;
     },
     onStatusChange: function () {
         function updateStatus() {
