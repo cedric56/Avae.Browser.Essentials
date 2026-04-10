@@ -7,30 +7,38 @@ namespace Microsoft.Maui.ApplicationModel
     /// <summary>
     /// A static class that contains platform-specific helper methods.
     /// </summary>
-    public static class Platform
+    public static partial class Platform
     {
         public static async Task Initialize()
         {
             await JSHost.ImportAsync("essentials", "/essentials.js");
 
+            if (DeviceInfo.Current is DeviceInfoImplementation implementation)
+            {
+                implementation.Initialize();
+            }
 
-            //var implementation = DeviceInfo.Current as DeviceInfoImplementation;
-            //if (implementation != null)
-            //{
-            //    implementation.Initialize();
-            //}
+            if (Connectivity.Current is ConnectivityImplementation connectivity)
+            {
+                connectivity.Initialize();
+            }
 
-            //var connectivity = Connectivity.Current as ConnectivityImplementation;
-            //if (connectivity != null)
-            //{
-            //    connectivity.Initialize();
-            //}
-
-            //var battery = Battery.Default as BatteryImplementation;
-            //if (battery != null)
-            //{
-            //    battery.Initialize();
-            //}
+            if (Battery.Default is BatteryImplementation battery)
+            {
+                battery.Initialize();
+            }
         }
+
+        [JSImport("fsInterop.initFsSync", "app")]
+        public static partial Task InitiateFsSyncAsync();
+
+        [JSImport("fsInterop.persistFs", "app")]
+        public static partial Task<bool> PersistFsAsync();
+
+        [JSImport("fsInterop.startPeriodicFlush", "app")]
+        public static partial void StartPeriodicFlush();
+
+        [JSImport("fsInterop.stopPeriodicFlush", "app")]
+        public static partial void StopPeriodicFlush();
     }
 }
