@@ -769,7 +769,10 @@ export const geolocationInterop = {
 export const batteryInterop = {
     getBatteryStatus: async function () {
         if (!navigator.getBattery) {
-            return { success: false, error: "Battery API not supported in this browser" };
+            return JSON.stringify({
+                success: false,
+                error: "Battery API not supported in this browser"
+            });
         }
         const battery = await navigator.getBattery();
 
