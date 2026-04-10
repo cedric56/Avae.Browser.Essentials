@@ -14,23 +14,23 @@ namespace Microsoft.Maui.ApplicationModel
             await JSHost.ImportAsync("essentials", "/essentials.js");
 
 
-            var implementation = DeviceInfo.Current as DeviceInfoImplementation;
-            if (implementation != null)
-            {
-                implementation.Initialize();
-            }
+            //var implementation = DeviceInfo.Current as DeviceInfoImplementation;
+            //if (implementation != null)
+            //{
+            //    implementation.Initialize();
+            //}
 
-            var connectivity = Connectivity.Current as ConnectivityImplementation;
-            if (connectivity != null)
-            {
-                connectivity.Initialize();
-            }
+            //var connectivity = Connectivity.Current as ConnectivityImplementation;
+            //if (connectivity != null)
+            //{
+            //    connectivity.Initialize();
+            //}
 
-            var battery = Battery.Default as BatteryImplementation;
-            if (battery != null)
-            {
-                battery.Initialize();
-            }
+            //var battery = Battery.Default as BatteryImplementation;
+            //if (battery != null)
+            //{
+            //    battery.Initialize();
+            //}
         }
     }
 }

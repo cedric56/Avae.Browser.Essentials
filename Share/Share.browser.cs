@@ -27,21 +27,16 @@ namespace Microsoft.Maui.ApplicationModel.DataTransfer
 
         private class File64
         {
-            public string FileName { get; set; }
-            public string FileContentBase64 { get; set; }
-            public string MimeType { get; set; }
+            public string? FileName { get; set; }
+            public string? FileContentBase64 { get; set; }
+            public string? MimeType { get; set; }
         }
 
         private static async Task<byte[]> ReadFully(Stream input)
         {
             const int DefaultBufferSize = 64 * 1024; // 64 KB is usually optimal
             using var ms = new MemoryStream((int)(input.CanSeek ? input.Length : DefaultBufferSize));
-            byte[] buffer = new byte[DefaultBufferSize];
-            int read;
-            while ((read = await input.ReadAsync(buffer.AsMemory(0, buffer.Length))) > 0)
-            {
-                ms.Write(buffer, 0, read);
-            }
+            await input.CopyToAsync(ms);
             return ms.ToArray();
         }
 
@@ -50,7 +45,18 @@ namespace Microsoft.Maui.ApplicationModel.DataTransfer
             var files64 = new List<File64>();
             foreach(var file in request.Files ?? [])
             {
-                file.Data = file.Data ?? await ReadFully(await file.OpenReadAsync());
+                if (file.Data is null)
+                {
+                    using var stream = await file.OpenReadAsync();
+                    if (stream is MemoryStream ms)
+                    {
+                        file.Data = ms.ToArray();
+                    }
+                    else
+                    {
+                        file.Data = await ReadFully(stream);
+                    }
+                }
                 var file64 = new File64()
                 {
                     FileContentBase64 = Convert.ToBase64String(file.Data),

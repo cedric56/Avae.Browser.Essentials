@@ -13,9 +13,7 @@ namespace Microsoft.Maui.Devices.Sensors
         [JSExport]
         public static void OnReadingChanged(double x, double y, double z)
         {
-            var implementation = Gyroscope.Default as GyroscopeImplementation;
-
-            if (implementation == null)
+            if (Gyroscope.Default is not GyroscopeImplementation implementation)
                 return;
 
             if (!implementation.IsMonitoring)
@@ -24,7 +22,7 @@ namespace Microsoft.Maui.Devices.Sensors
             implementation.RaiseReadingChanged(new GyroscopeData(x, y, z));
         }
 
-        bool PlatformIsSupported => true;
+        static bool PlatformIsSupported => true;
 
         void PlatformStart(SensorSpeed sensorSpeed)
         {
@@ -37,20 +35,16 @@ namespace Microsoft.Maui.Devices.Sensors
             IsMonitoring = false;
         }
 
-        private int GetFrequency(SensorSpeed sensorSpeed)
+        private static int GetFrequency(SensorSpeed sensorSpeed)
         {
-            switch (sensorSpeed)
+            return sensorSpeed switch
             {
-                case SensorSpeed.Default:
-                    return 30;
-                case SensorSpeed.UI:
-                    return 15;
-                case SensorSpeed.Game:
-                    return 60;
-                case SensorSpeed.Fastest:
-                    return 100;
-            }
-            return 30;
+                SensorSpeed.Default => 30,
+                SensorSpeed.UI => 15,
+                SensorSpeed.Game => 60,
+                SensorSpeed.Fastest => 100,
+                _ => 30,
+            };
         }
     }
 }

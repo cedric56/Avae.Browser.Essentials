@@ -17,8 +17,7 @@ namespace Microsoft.Maui.ApplicationModel
 
         public Task OpenAsync(Placemark placemark, MapLaunchOptions options)
         {
-            if (placemark == null)
-                throw new ArgumentNullException(nameof(placemark));
+            ArgumentNullException.ThrowIfNull(placemark);
             return OpenAsync(placemark.Location.Latitude, placemark.Location.Longitude, options);
         }
 

@@ -181,7 +181,7 @@ namespace Microsoft.Maui.Storage
 
 		string? contentType;
 
-		public byte[] Data { get; set; }
+		public byte[]? Data { get; set; }
 
 		// The caller must setup FullPath at least!!!
 		internal FileBase()
@@ -239,7 +239,7 @@ namespace Microsoft.Maui.Storage
 		{
 			// try the provided type
 			if (!string.IsNullOrWhiteSpace(contentType))
-				return contentType!;
+				return contentType;
 
 			// try get from the file extension
 			var ext = Path.GetExtension(FullPath);

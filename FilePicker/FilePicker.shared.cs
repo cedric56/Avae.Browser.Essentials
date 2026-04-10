@@ -95,7 +95,7 @@ namespace Microsoft.Maui.Storage
 	partial class FilePickerImplementation : IFilePicker
 	{
 		public async Task<FileResult?> PickAsync(PickOptions? options = null) =>
-			(await PlatformPickAsync(options))?.FirstOrDefault();
+			(await PlatformPickAsync(options ?? PickOptions.Default))?.FirstOrDefault();
 
 		public Task<IEnumerable<FileResult>> PickMultipleAsync(PickOptions? options = null) =>
 			PlatformPickAsync(options ?? PickOptions.Default, true);

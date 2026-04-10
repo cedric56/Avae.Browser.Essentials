@@ -30,7 +30,7 @@ namespace Microsoft.Maui.Media
             {
                 PickerTitle = options?.Title,
                 FileTypes = FilePickerFileType.Images
-            });
+            })!;
         }
 
         public async Task<FileResult> CapturePhotoAsync(MediaPickerOptions? options = null)
@@ -53,7 +53,7 @@ namespace Microsoft.Maui.Media
             {
                 PickerTitle = options?.Title,
                 FileTypes = FilePickerFileType.Videos
-            });
+            })!;
         }
 
         public async Task<FileResult> CaptureVideoAsync(MediaPickerOptions? options = null)
