@@ -95,7 +95,7 @@ namespace Microsoft.Maui.Devices
 			string.Equals(devicePlatform, other, StringComparison.Ordinal);
 
 		/// <inheritdoc cref="IEquatable{T}.Equals(T)"/>
-		public override bool Equals(object obj) =>
+		public override bool Equals(object? obj) =>
 			obj is DevicePlatform && Equals((DevicePlatform)obj);
 
 		/// <summary>
