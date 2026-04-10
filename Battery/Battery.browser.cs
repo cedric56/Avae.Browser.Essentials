@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Microsoft.Maui.Devices
 {
-    public partial class BatteryImplementation : IBattery
+    internal partial class BatteryImplementation : IBattery
     {
         [JSImport("batteryInterop.getBatteryStatus", "essentials")]
         public static partial Task<string> GetBatteryStatus();

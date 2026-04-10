@@ -22,6 +22,9 @@ namespace Microsoft.Maui.Devices
         [JsonPropertyName("level")]
         public double Level { get; set; }
 
+        [JsonPropertyName("error")]
+        public string? Error { get; set; }
+
         [JsonPropertyName("errorCode")]
         public int? ErrorCode { get; set; }
     }
