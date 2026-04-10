@@ -9,6 +9,10 @@ namespace Microsoft.Maui.ApplicationModel
     /// </summary>
     public static partial class Platform
     {
+        /// <summary>
+        /// Initializes the platform-specific services and resources required by the application.
+        /// </summary>
+        /// <returns></returns>
         public static async Task Initialize()
         {
             await JSHost.ImportAsync("essentials", "/essentials.js");
@@ -26,15 +30,30 @@ namespace Microsoft.Maui.ApplicationModel
             }
         }
 
+        /// <summary>
+        /// Loads files from indexed db to be available like a normal files for I/O. 
+        /// This should be called before any manipulation with files.
+        /// </summary>
+        /// <returns></returns>
         [JSImport("fsInterop.initFsSync", "app")]
         public static partial Task InitiateFsSyncAsync();
 
+        /// <summary>
+        /// When called, will persist any operations to an IndexedDB instance.
+        /// </summary>
+        /// <returns></returns>
         [JSImport("fsInterop.persistFs", "app")]
         public static partial Task<bool> PersistFsAsync();
 
+        /// <summary>
+        /// Starts a periodic timer every 5 seconds to call PersistFsAsync internally.
+        /// </summary>
         [JSImport("fsInterop.startPeriodicFlush", "app")]
         public static partial void StartPeriodicFlush();
 
+        /// <summary>
+        /// Stops the periodic timer started by StartPeriodicFlush.
+        /// </summary>
         [JSImport("fsInterop.stopPeriodicFlush", "app")]
         public static partial void StopPeriodicFlush();
     }
