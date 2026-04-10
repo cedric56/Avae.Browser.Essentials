@@ -74,13 +74,13 @@ namespace Microsoft.Maui.Devices
                     return DevicePlatform.iOS;
 
 
-                if (true == browserInfo.OSName?.Contains("Windows"))
+                if (true == browserInfo.OSName?.Contains("Windows", StringComparison.OrdinalIgnoreCase))
                     return DevicePlatform.WinUI;
 
-                if (true == browserInfo.OSName?.ToUpper().Contains("LINUX"))
+                if (true == browserInfo.OSName?.Contains("LINUX", StringComparison.OrdinalIgnoreCase))
                     return DevicePlatform.Linux;
 
-                if (true == browserInfo.OSName?.ToUpper().Contains("MAC"))
+                if (true == browserInfo.OSName?.Contains("MAC", StringComparison.OrdinalIgnoreCase))
                     return DevicePlatform.macOS;
 
                 return DevicePlatform.Unknown;
