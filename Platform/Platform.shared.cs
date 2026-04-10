@@ -13,10 +13,7 @@ namespace Microsoft.Maui.ApplicationModel
         {
             await JSHost.ImportAsync("essentials", "/essentials.js");
 
-            if (DeviceInfo.Current is DeviceInfoImplementation implementation)
-            {
-                implementation.Initialize();
-            }
+            await DeviceInfoImplementation.InitializeAsync();
 
             if (Connectivity.Current is ConnectivityImplementation connectivity)
             {
@@ -25,7 +22,7 @@ namespace Microsoft.Maui.ApplicationModel
 
             if (Battery.Default is BatteryImplementation battery)
             {
-                battery.Initialize();
+                await battery.InitializeAsync();
             }
         }
 

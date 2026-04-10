@@ -11,8 +11,7 @@ namespace Microsoft.Maui.Devices
         [JSExport]
         public static void OnBatteryChanged(double level, bool charging, double chargingTime, double dischargingTime)
         {
-            var implementation = Battery.Default as BatteryImplementation;
-            if (implementation == null)
+            if (Battery.Default is not BatteryImplementation implementation)
                 return;
 
             implementation.chargeLevel = level;
@@ -24,7 +23,6 @@ namespace Microsoft.Maui.Devices
         private double chargeLevel;
         private BatteryState batteryState;
         private BatteryPowerSource batteryPowerSource;
-        private EnergySaverStatus energySaverStatus;
 
         public double ChargeLevel => chargeLevel;
 
@@ -34,18 +32,16 @@ namespace Microsoft.Maui.Devices
 
         public EnergySaverStatus EnergySaverStatus => EnergySaverStatus.Off;
 
-        public async void Initialize()
+        public async Task InitializeAsync()
         {
             var result = await GetBatteryStatus();
-            //var obj = JsonConvert.DeserializeObject<BatteryResult>(result);
+
             var obj = JsonSerializer.Deserialize<BatteryResult>(result);
-            if (true == obj?.success)
+            if (obj?.success ?? false)
             {
                 chargeLevel = obj.level;
                 batteryState = obj.charging ? BatteryState.Charging : BatteryState.Discharging;
                 batteryPowerSource = obj.charging ? BatteryPowerSource.AC : BatteryPowerSource.Battery;
-                
-                //energySaverStatus = obj.DischargingTime
             }
         }
 

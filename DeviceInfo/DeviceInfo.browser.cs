@@ -20,10 +20,10 @@ namespace Microsoft.Maui.Devices
             browserInfo.CPUArchitect = value;
         }
 
-        private static string osInfo;
-        private static BrowserInfo browserInfo = new BrowserInfo();
+        private static string? osInfo;
+        private static BrowserInfo browserInfo = new();
 
-        public string Model => browserInfo.DeviceModel;
+        public string Model => browserInfo.DeviceModel ?? string.Empty;
 
         public string Manufacturer
         {
@@ -37,7 +37,7 @@ namespace Microsoft.Maui.Devices
                     RealPlatform == DevicePlatform.macOS)
                     return "Apple Inc.";
 
-                return browserInfo.GPUVendor;
+                return browserInfo.GPUVendor ?? string.Empty;
             }
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.Maui.Devices
         {
             get
             {
-                return browserInfo.BrowserName;
+                return browserInfo.BrowserName ?? string.Empty;
             }
         }
 
@@ -114,15 +114,18 @@ namespace Microsoft.Maui.Devices
         {
             get
             {
-                Enum.TryParse<DeviceType>(browserInfo.DeviceType, out var result);
-                return result;
+                if (Enum.TryParse<DeviceType>(browserInfo.DeviceType, out var result))
+                {
+                    return result;
+                }
+                return DeviceType.Unknown;
             }
         }
 
-        public async void Initialize()
+        public static async Task InitializeAsync()
         {
             var infos = await GetInfos();
-            browserInfo = JsonSerializer.Deserialize<BrowserInfo>(infos);
+            browserInfo = JsonSerializer.Deserialize<BrowserInfo>(infos) ?? new BrowserInfo();
         }
 
         /// <summary>
