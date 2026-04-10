@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Essentials;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
@@ -18,14 +19,14 @@ namespace Microsoft.Maui.Devices.Sensors
         {
             var result = await GetCurrentLocation();
 
-            var obj = JsonSerializer.Deserialize<GeolocationResult>(result);
-            if (true == obj?.success)
+            var obj = JsonSerializer.Deserialize(result, AvaeJsonSerializerContext.Default.GeolocationResultInterop);
+            if (true == obj?.Success)
             {
                 var moq = new Location()
                 {
-                    Accuracy = obj.accuracy,
-                    Latitude = obj.latitude ?? 0,
-                    Longitude = obj.longitude ?? 0,
+                    Accuracy = obj.Accuracy,
+                    Latitude = obj.Latitude ?? 0,
+                    Longitude = obj.Longitude ?? 0,
 
                 };
                 return moq;
@@ -39,14 +40,14 @@ namespace Microsoft.Maui.Devices.Sensors
 
             var result = await GetCurrentLocation();
             
-            var obj = JsonSerializer.Deserialize<GeolocationResult>(result);
-            if (true == obj?.success)
+            var obj = JsonSerializer.Deserialize(result, AvaeJsonSerializerContext.Default.GeolocationResultInterop);
+            if (true == obj?.Success)
             {
                 var moq = new Location()
                 {
-                    Accuracy = obj.accuracy,
-                    Latitude = obj.latitude ?? 0,
-                    Longitude = obj.longitude ?? 0,                     
+                    Accuracy = obj.Accuracy,
+                    Latitude = obj.Latitude ?? 0,
+                    Longitude = obj.Longitude ?? 0,                     
 
                 };
                 return moq;
@@ -85,16 +86,6 @@ namespace Microsoft.Maui.Devices.Sensors
         public void StopListeningForeground()
         {
             IsListeningForeground = false;
-        }
-
-        public class GeolocationResult
-        {
-            public bool success { get; set; }
-            public string? message { get; set; }
-            public double? latitude { get; set; }
-            public double? longitude { get; set; }
-            public double? accuracy { get; set; }
-            public int? errorCode { get; set; }
         }
     }
 }

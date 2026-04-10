@@ -37,9 +37,6 @@ namespace Microsoft.Maui.Storage
             var resultList = new List<FileResult>();
             foreach (var file in results)
             {
-                //using var stream = await file.OpenReadAsync();
-                //var data = await ReadFully(stream);
-                
                 var moq = new FileResult(file.Path.OriginalString, MimeHelper.GetMimeType(Path.GetExtension(file.Name)))
                 {
                     //Data = data

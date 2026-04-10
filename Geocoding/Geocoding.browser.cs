@@ -1,10 +1,9 @@
-﻿using System.Globalization;
+﻿using Microsoft.Maui.Essentials;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Microsoft.Maui.Devices.Sensors
 {
-    class GeocodingImplementation : IGeocoding
+    partial class GeocodingImplementation : IGeocoding
     {
         public async Task<IEnumerable<Placemark>> GetPlacemarksAsync(double latitude, double longitude)
         {
@@ -16,22 +15,26 @@ namespace Microsoft.Maui.Devices.Sensors
             var response = await client.GetStringAsync(url);
 
             // Parse the JSON response
-            var data = JsonSerializer.Deserialize<Root>(response);
+            var data = JsonSerializer.Deserialize(response, AvaeJsonSerializerContext.Default.PlacemarkResponseInterop);
+
+            if (data is null)
+            {
+                return [new()];
+            }
 
             // Return the full address (can also return specific components)
-            return new List<Placemark>()
+            return
+            [
+                new()
                 {
-                    new Placemark()
-                {
-                    CountryName = data.address.country,
-                    CountryCode = data.address.country_code,
+                    CountryName = data.Address?.Country ?? string.Empty,
+                    CountryCode = data.Address?.CcountryCode ?? string.Empty,
                     Location = new Location() { Latitude = data.LatValue, Longitude = data.LonValue },
-                    FeatureName = data.address.road,
-                    Locality = data.address.village,
-                    PostalCode = data.address.postcode,
-
+                    FeatureName = data.Address?.Road ?? string.Empty,
+                    Locality = data.Address?.Village ?? string.Empty,
+                    PostalCode = data.Address?.Postcode ?? string.Empty
                 }
-            };
+            ];
         }
 
         public async Task<IEnumerable<Location>> GetLocationsAsync(string address)
@@ -44,8 +47,12 @@ namespace Microsoft.Maui.Devices.Sensors
             var response = await client.GetStringAsync(url);
 
             // Parse the JSON response
-            var data = JsonSerializer.Deserialize<IEnumerable<NominatimResponse>>(response);
-            return data.Select(d =>
+            var data = JsonSerializer.Deserialize(response, AvaeJsonSerializerContext.Default.IEnumerableNominatimResponse);
+            if (data is null)
+            {
+                return [];
+            }
+            return [.. data.Select(d =>
             {
                 return new Location()
                 {
@@ -53,64 +60,7 @@ namespace Microsoft.Maui.Devices.Sensors
                     Longitude = d.LonValue
                 };
 
-            }).ToList();
-        }
-
-        public class Root
-        {
-            public int place_id { get; set; }
-            public string licence { get; set; }
-            public string osm_type { get; set; }
-            public int osm_id { get; set; }
-            public string lat { get; set; }
-            public string lon { get; set; }
-            public string @class { get; set; }
-            public string type { get; set; }
-            public int place_rank { get; set; }
-            public string importance { get; set; }
-            public string addresstype { get; set; }
-            public string name { get; set; }
-            public string display_name { get; set; }
-            public Address address { get; set; }
-            public List<string> boundingbox { get; set; }
-
-            public double LatValue => double.Parse(lat, CultureInfo.InvariantCulture);
-            public double LonValue => double.Parse(lon, CultureInfo.InvariantCulture);
-            public double Importance => double.Parse(importance, CultureInfo.InvariantCulture);
-
-        }
-
-        public class Address
-        {
-            public string road { get; set; }
-            public string hamlet { get; set; }
-            public string village { get; set; }
-            public string municipality { get; set; }
-            public string county { get; set; }
-
-            [JsonPropertyName("ISO3166-2-lvl6")]
-            public string ISO31662lvl6 { get; set; }
-            public string state { get; set; }
-
-            [JsonPropertyName("ISO3166-2-lvl4")]
-            public string ISO31662lvl4 { get; set; }
-            public string region { get; set; }
-            public string postcode { get; set; }
-            public string country { get; set; }
-            public string country_code { get; set; }
-        }
-
-        public class NominatimResponse
-        {
-            [JsonPropertyName("lat")]
-            public string Lat { get; set; }
-
-            [JsonPropertyName("lon")]
-            public string Lon { get; set; }
-
-
-            public double LatValue => double.Parse(Lat, CultureInfo.InvariantCulture);
-            public double LonValue => double.Parse(Lon, CultureInfo.InvariantCulture);
+            })];
         }
     }
 }

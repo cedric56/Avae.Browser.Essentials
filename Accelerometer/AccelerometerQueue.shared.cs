@@ -12,8 +12,8 @@ namespace Microsoft.Maui.Devices.Sensors
 
 		readonly int minQueueSize = 4;
 
-		AccelerometerSample oldest;
-		AccelerometerSample newest;
+		AccelerometerSample? oldest;
+		AccelerometerSample? newest;
 		int sampleCount;
 		int acceleratingCount;
 
@@ -84,12 +84,12 @@ namespace Microsoft.Maui.Devices.Sensors
 
 			public bool IsAccelerating { get; set; }
 
-			public AccelerometerSample Next { get; set; }
+			public AccelerometerSample? Next { get; set; }
 		}
 
 		internal class AccelerometerDataPool
 		{
-			AccelerometerSample head;
+			AccelerometerSample? head;
 
 			internal AccelerometerSample Acquire()
 			{

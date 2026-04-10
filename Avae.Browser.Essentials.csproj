@@ -34,8 +34,18 @@
     <Compile Include="**\*.browser.*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AvaeJsonSerializerContext.cs" />
     <Compile Include="AvaloniaInterop.cs" />
+    <Compile Include="Battery\BatteryResult.cs" />
+    <Compile Include="Contacts\ContactsResponseInterop.cs" />
+    <Compile Include="DeviceDisplay\DeviceDisplayInfo.cs" />
+    <Compile Include="DeviceInfo\BrowserInfo.cs" />
+    <Compile Include="Geocoding\Address.cs" />
+    <Compile Include="Geocoding\NominatimResponse.cs" />
+    <Compile Include="Geocoding\PlacemarkResponseInterop.cs" />
+    <Compile Include="Geolocation\GeolocationResultInterop.cs" />
     <Compile Include="JSInterop.cs" />
+    <Compile Include="TextToSpeech\TextToSpeechResponseInterop.cs" />
   </ItemGroup>
 
   <ItemGroup Label="FilesToCopy">

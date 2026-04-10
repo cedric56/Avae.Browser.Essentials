@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using Microsoft.Maui.Essentials;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
 namespace Microsoft.Maui.Devices
@@ -36,12 +37,12 @@ namespace Microsoft.Maui.Devices
         {
             var result = await GetBatteryStatus();
 
-            var obj = JsonSerializer.Deserialize<BatteryResult>(result);
-            if (obj?.success ?? false)
+            var obj = JsonSerializer.Deserialize(result, AvaeJsonSerializerContext.Default.BatteryResult);
+            if (obj?.Success ?? false)
             {
-                chargeLevel = obj.level;
-                batteryState = obj.charging ? BatteryState.Charging : BatteryState.Discharging;
-                batteryPowerSource = obj.charging ? BatteryPowerSource.AC : BatteryPowerSource.Battery;
+                chargeLevel = obj.Level;
+                batteryState = obj.Charging ? BatteryState.Charging : BatteryState.Discharging;
+                batteryPowerSource = obj.Charging ? BatteryPowerSource.AC : BatteryPowerSource.Battery;
             }
         }
 
@@ -60,17 +61,6 @@ namespace Microsoft.Maui.Devices
 
         void StopEnergySaverListeners()
         {
-        }
-
-        public class BatteryResult
-        {
-            public bool success { get; set; }
-            public string? message { get; set; }
-            public bool charging { get; set; }
-            public double? chargingTime { get; set; }
-            public double? dischargingTime { get; set; }
-            public double level { get; set; }
-            public int? errorCode { get; set; }
         }
     }
 }
