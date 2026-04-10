@@ -35,26 +35,26 @@ namespace Microsoft.Maui.ApplicationModel
         /// This should be called before any manipulation with files.
         /// </summary>
         /// <returns></returns>
-        [JSImport("fsInterop.initFsSync", "app")]
+        [JSImport("fsInterop.initFsSync", "essentials")]
         public static partial Task InitiateFsSyncAsync();
 
         /// <summary>
         /// When called, will persist any operations to an IndexedDB instance.
         /// </summary>
         /// <returns></returns>
-        [JSImport("fsInterop.persistFs", "app")]
+        [JSImport("fsInterop.persistFs", "essentials")]
         public static partial Task<bool> PersistFsAsync();
 
         /// <summary>
         /// Starts a periodic timer every 5 seconds to call PersistFsAsync internally.
         /// </summary>
-        [JSImport("fsInterop.startPeriodicFlush", "app")]
+        [JSImport("fsInterop.startPeriodicFlush", "essentials")]
         public static partial void StartPeriodicFlush();
 
         /// <summary>
         /// Stops the periodic timer started by StartPeriodicFlush.
         /// </summary>
-        [JSImport("fsInterop.stopPeriodicFlush", "app")]
+        [JSImport("fsInterop.stopPeriodicFlush", "essentials")]
         public static partial void StopPeriodicFlush();
     }
 }
