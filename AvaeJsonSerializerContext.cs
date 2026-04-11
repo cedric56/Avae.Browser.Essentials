@@ -16,6 +16,7 @@ namespace Microsoft.Maui.Essentials;
 [JsonSerializable(typeof(GeolocationResultInterop))]
 [JsonSerializable(typeof(TextToSpeechResponseInterop))]
 [JsonSerializable(typeof(IEnumerable<TextToSpeechResponseInterop>))]
+[JsonSerializable(typeof(GeolocationReadingResultInterop))]
 internal partial class AvaeJsonSerializerContext : JsonSerializerContext
 {
 }

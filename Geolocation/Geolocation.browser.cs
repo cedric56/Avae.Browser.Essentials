@@ -11,8 +11,10 @@ namespace Microsoft.Maui.Devices.Sensors
         public static partial Task<string> GetCurrentLocation();
 
         [JSImport("geolocationInterop.startLocationReading", "essentials")]
-        internal static partial int StartLocationReadingInterop([JSMarshalAs<JSType.Function<JSType.Number, JSType.Number>>] Action<double, double> onSuccess
-            , [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<int, string> onError, bool highAccuracy = false);
+        internal static partial int StartLocationReadingInterop(
+            [JSMarshalAs<JSType.Function<JSType.String>>] Action<string> onSuccess
+            , [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<short, string> onError
+            , bool highAccuracy = false);
 
         [JSImport("geolocationInterop.stopLocationReading", "essentials")]
         internal static partial void StopLocationReadingInterop([JSMarshalAs<JSType.Number>] int id);
@@ -82,7 +84,7 @@ namespace Microsoft.Maui.Devices.Sensors
             if (IsListeningForeground)
                 throw new InvalidOperationException("Already listening to location changes.");
 
-            watchingId = StartLocationReadingInterop(OnSuccessInterop, OnErrorInterop);
+            watchingId = StartLocationReadingInterop(OnSuccessInterop, OnErrorInterop, request.DesiredAccuracy is GeolocationAccuracy.High or GeolocationAccuracy.Best);
 
             return Task.FromResult(true);
         }
@@ -98,12 +100,25 @@ namespace Microsoft.Maui.Devices.Sensors
             watchingId = -1;
         }
 
-        void OnSuccessInterop(double lat, double lng)
+        void OnSuccessInterop(string jsonData)
         {
-            OnLocationChanged(new Location(lat, lng));
+            var result = JsonSerializer.Deserialize(jsonData, AvaeJsonSerializerContext.Default.GeolocationReadingResultInterop);
+
+            if (result is null)
+            {
+                return;
+            }
+
+            OnLocationChanged(new Location(result.Latitude, result.Longitude)
+            {
+                Altitude = result.Altitude,
+                Accuracy = result.Accuracy,
+                Speed = result.Speed,
+                Course = result.Course
+            });
         }
 
-        void OnErrorInterop(int code, string message)
+        void OnErrorInterop(short code, string message)
         {
             if (code == 1)
             {

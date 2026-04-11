@@ -43,6 +43,7 @@
     <Compile Include="Geocoding\Address.cs" />
     <Compile Include="Geocoding\NominatimResponse.cs" />
     <Compile Include="Geocoding\PlacemarkResponseInterop.cs" />
+    <Compile Include="Geolocation\GeolocationReadingResultInterop.cs" />
     <Compile Include="Geolocation\GeolocationResultInterop.cs" />
     <Compile Include="JSInterop.cs" />
     <Compile Include="TextToSpeech\TextToSpeechResponseInterop.cs" />

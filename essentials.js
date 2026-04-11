@@ -769,7 +769,7 @@ export const geolocationInterop = {
         };
 
         return navigator.geolocation.watchPosition((pos) => {
-            successFunc(pos.coords.latitude, pos.coords.longitude);
+            successFunc(JSON.stringify(pos.coords.toJSON()));
         }, (err) => {
             errFunc(err.code, err.message);
         }, options);
