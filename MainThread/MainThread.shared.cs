@@ -105,7 +105,7 @@ namespace Microsoft.Maui.ApplicationModel
 				return funcTask();
 			}
 
-			var tcs = new TaskCompletionSource<object>();
+			var tcs = new TaskCompletionSource<object?>();
 
 			BeginInvokeOnMainThread(
 				async () =>
@@ -160,9 +160,9 @@ namespace Microsoft.Maui.ApplicationModel
 		/// Gets the main thread synchonization context.
 		/// </summary>
 		/// <returns>The synchronization context for the main thread.</returns>
-		public static async Task<SynchronizationContext> GetMainThreadSynchronizationContextAsync()
+		public static async Task<SynchronizationContext?> GetMainThreadSynchronizationContextAsync()
 		{
-			SynchronizationContext ret = null;
+			SynchronizationContext? ret = null;
 			await InvokeOnMainThreadAsync(() =>
 				ret = SynchronizationContext.Current).ConfigureAwait(false);
 			return ret;

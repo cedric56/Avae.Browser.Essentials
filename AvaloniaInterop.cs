@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 
@@ -24,6 +25,11 @@ namespace Microsoft.Maui.Essentials
         public static IStorageProvider? GetStorage()
         {
             return GetTopLevel()?.StorageProvider;
+        }
+
+        public static IClipboard? GetClipboard()
+        {
+            return GetTopLevel()?.Clipboard;
         }
 
         public static FlowDirection? GetFlowDirection()

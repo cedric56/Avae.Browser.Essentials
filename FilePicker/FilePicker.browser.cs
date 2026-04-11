@@ -10,7 +10,7 @@ namespace Microsoft.Maui.Storage
         async Task<IEnumerable<FileResult>> PlatformPickAsync(PickOptions options, bool allowMultiple = false)
         {
             var provider = AvaloniaInterop.GetStorage();
-            if (provider == null) return null;
+            if (provider == null) return [];
 
             var pOptions = new FilePickerOpenOptions
             {
@@ -37,13 +37,10 @@ namespace Microsoft.Maui.Storage
             var resultList = new List<FileResult>();
             foreach (var file in results)
             {
-                //using var stream = await file.OpenReadAsync();
-                //var data = await ReadFully(stream);
-                
                 var moq = new FileResult(file.Path.OriginalString, MimeHelper.GetMimeType(Path.GetExtension(file.Name)))
                 {
                     //Data = data
-                    OpenStreamAsync = () => file.OpenReadAsync()
+                    OpenStreamAsync = file.OpenReadAsync
                 };
                 resultList.Add(moq);
             }

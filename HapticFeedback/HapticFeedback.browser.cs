@@ -14,10 +14,12 @@ namespace Microsoft.Maui.Devices
             VibrateWithDuration(GetDuration(type));
         }
 
-        private int GetDuration(HapticFeedbackType type)
+        private static int GetDuration(HapticFeedbackType type)
         {
             if (type == HapticFeedbackType.Click)
+            {
                 return 20;
+            }
             return 100;
         }
     }

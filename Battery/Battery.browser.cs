@@ -1,9 +1,10 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using Microsoft.Maui.Essentials;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
 namespace Microsoft.Maui.Devices
 {
-    public partial class BatteryImplementation : IBattery
+    internal partial class BatteryImplementation : IBattery
     {
         [JSImport("batteryInterop.getBatteryStatus", "essentials")]
         public static partial Task<string> GetBatteryStatus();
@@ -11,8 +12,7 @@ namespace Microsoft.Maui.Devices
         [JSExport]
         public static void OnBatteryChanged(double level, bool charging, double chargingTime, double dischargingTime)
         {
-            var implementation = Battery.Default as BatteryImplementation;
-            if (implementation == null)
+            if (Battery.Default is not BatteryImplementation implementation)
                 return;
 
             implementation.chargeLevel = level;
@@ -24,7 +24,6 @@ namespace Microsoft.Maui.Devices
         private double chargeLevel;
         private BatteryState batteryState;
         private BatteryPowerSource batteryPowerSource;
-        private EnergySaverStatus energySaverStatus;
 
         public double ChargeLevel => chargeLevel;
 
@@ -34,18 +33,16 @@ namespace Microsoft.Maui.Devices
 
         public EnergySaverStatus EnergySaverStatus => EnergySaverStatus.Off;
 
-        public async void Initialize()
+        public async Task InitializeAsync()
         {
             var result = await GetBatteryStatus();
-            //var obj = JsonConvert.DeserializeObject<BatteryResult>(result);
-            var obj = JsonSerializer.Deserialize<BatteryResult>(result);
-            if (true == obj?.success)
+
+            var obj = JsonSerializer.Deserialize(result, AvaeJsonSerializerContext.Default.BatteryResult);
+            if (obj?.Success ?? false)
             {
-                chargeLevel = obj.level;
-                batteryState = obj.charging ? BatteryState.Charging : BatteryState.Discharging;
-                batteryPowerSource = obj.charging ? BatteryPowerSource.AC : BatteryPowerSource.Battery;
-                
-                //energySaverStatus = obj.DischargingTime
+                chargeLevel = obj.Level;
+                batteryState = obj.Charging ? BatteryState.Charging : BatteryState.Discharging;
+                batteryPowerSource = obj.Charging ? BatteryPowerSource.AC : BatteryPowerSource.Battery;
             }
         }
 
@@ -64,17 +61,6 @@ namespace Microsoft.Maui.Devices
 
         void StopEnergySaverListeners()
         {
-        }
-
-        public class BatteryResult
-        {
-            public bool success { get; set; }
-            public string? message { get; set; }
-            public bool charging { get; set; }
-            public double? chargingTime { get; set; }
-            public double? dischargingTime { get; set; }
-            public double level { get; set; }
-            public int? errorCode { get; set; }
         }
     }
 }

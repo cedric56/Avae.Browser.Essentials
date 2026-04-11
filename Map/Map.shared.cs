@@ -200,26 +200,23 @@ namespace Microsoft.Maui.ApplicationModel
 		/// <param name="options">Launch options to use.</param>
 		/// <returns>A <see cref="Task"/> object with the current status of the asynchronous operation.</returns>
 		/// <exception cref="ArgumentNullException">Thrown when either <paramref name="location"/> or <paramref name="options"/> is <see langword="null"/>.</exception>
-		public static Task OpenAsync(this IMap map, Location location, MapLaunchOptions options)
+		public static Task OpenAsync(this IMap map, Location? location, MapLaunchOptions? options)
 		{
-			if (location == null)
-				throw new ArgumentNullException(nameof(location));
+            ArgumentNullException.ThrowIfNull(location);
+            ArgumentNullException.ThrowIfNull(options);
 
-			if (options == null)
-				throw new ArgumentNullException(nameof(options));
+            return map.OpenAsync(location.Latitude, location.Longitude, options);
+        }
 
-			return map.OpenAsync(location.Latitude, location.Longitude, options);
-		}
-
-		/// <summary>
-		/// First checks if the installed map application can be opened,
-		/// then opens the installed application to a specific location with launch options.
-		/// </summary>
-		/// <param name="map">The object this method is invoked on.</param>
-		/// <param name="location">Location to open in the map application.</param>
-		/// <returns><see langword="true"/> if the map application is opened, otherwise <see langword="false"/>.</returns>
-		/// <exception cref="ArgumentNullException">Thrown when <paramref name="location"/> is <see langword="null"/>.</exception>
-		public static Task<bool> TryOpenAsync(this IMap map, Location location) =>
+        /// <summary>
+        /// First checks if the installed map application can be opened,
+        /// then opens the installed application to a specific location with launch options.
+        /// </summary>
+        /// <param name="map">The object this method is invoked on.</param>
+        /// <param name="location">Location to open in the map application.</param>
+        /// <returns><see langword="true"/> if the map application is opened, otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="location"/> is <see langword="null"/>.</exception>
+        public static Task<bool> TryOpenAsync(this IMap map, Location location) =>
 			map.TryOpenAsync(location, new MapLaunchOptions());
 
 		/// <summary>
@@ -231,15 +228,12 @@ namespace Microsoft.Maui.ApplicationModel
 		/// <param name="options">Launch options to use.</param>
 		/// <returns><see langword="true"/> if the map application is opened, otherwise <see langword="false"/>.</returns>
 		/// <exception cref="ArgumentNullException">Thrown when either <paramref name="location"/> or <paramref name="options"/> is <see langword="null"/>.</exception>
-		public static Task<bool> TryOpenAsync(this IMap map, Location location, MapLaunchOptions options)
+		public static Task<bool> TryOpenAsync(this IMap map, Location? location, MapLaunchOptions? options)
 		{
-			if (location == null)
-				throw new ArgumentNullException(nameof(location));
+            ArgumentNullException.ThrowIfNull(location);
+            ArgumentNullException.ThrowIfNull(options);
 
-			if (options == null)
-				throw new ArgumentNullException(nameof(options));
-
-			return map.TryOpenAsync(location.Latitude, location.Longitude, options);
+            return map.TryOpenAsync(location.Latitude, location.Longitude, options);
 		}
 
 		/// <summary>

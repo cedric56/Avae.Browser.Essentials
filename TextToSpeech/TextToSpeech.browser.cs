@@ -1,12 +1,12 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using Microsoft.Maui.Essentials;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Microsoft.Maui.Media
 {
     partial class TextToSpeechImplementation : ITextToSpeech
     {
-       static  Dictionary<string, string> localeToCountry = new Dictionary<string, string>
+        private static  Dictionary<string, string> localeToCountry = new Dictionary<string, string>
 {
     { "af-ZA", "South Africa" },
     { "am-ET", "Ethiopia" },
@@ -175,17 +175,17 @@ namespace Microsoft.Maui.Media
         async Task<IEnumerable<Locale>> PlatformGetLocalesAsync()
         {
             var json = await GetVoices();
-            var voices = JsonSerializer.Deserialize<IEnumerable<Root>>(json);
+            var voices = JsonSerializer.Deserialize(json, AvaeJsonSerializerContext.Default.IEnumerableTextToSpeechResponseInterop);
             if(voices == null)
-                return Enumerable.Empty<Locale>();
-            return voices.Select(ToLocale).ToList();
+                return [];
+            return [.. voices.Select(ToLocale)];
         }
 
-        private Locale ToLocale(Root r)
+        private Locale ToLocale(TextToSpeechResponseInterop r)
         {
-            localeToCountry.TryGetValue(r.lang, out string? country);
+            localeToCountry.TryGetValue(r.Lang ?? "en", out string? country);
 
-            var locale = new Locale(r.lang, country ?? string.Empty, r.name, r.voiceURI);
+            var locale = new Locale(r.Lang ?? "en", country ?? string.Empty, r.Name ?? string.Empty, r.VoiceURI ?? string.Empty);
             return locale;
         }
 
@@ -208,17 +208,6 @@ namespace Microsoft.Maui.Media
             }
 
             return Task.CompletedTask;
-        }
-
-        public class Root
-        {
-            public string name { get; set; }
-            public string lang { get; set; }
-
-            [JsonPropertyName("default")]
-            public bool @default { get; set; }
-            public string voiceURI { get; set; }
-            public bool localService { get; set; }
         }
     }
 }

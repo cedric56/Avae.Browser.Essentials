@@ -10,15 +10,52 @@ fs.mount(fs.filesystems.IDBFS, { autoPersist: true }, "/_cache");
 
 fs.mkdir('/_appdata', { recursive: true });
 fs.mount(fs.filesystems.IDBFS, { autoPersist: true }, "/_appdata");
-fs.syncfs(true, function (err) { });
-setInterval(() => {
-    fs.syncfs(false, (err) => {
-        if (err) console.error("Periodic sync failed:", err);
-        //console.log("Persist");
-    });
-}, 5000); // Every 5 seconds
 
 const exports = await dotnetRuntime.getAssemblyExports("Microsoft.Maui.Essentials");
+
+let periodicFlushIntervalId = -1;
+
+export const fsInterop = {
+    initFsSync: async function () {
+        return new Promise((resolve, reject) => {
+            fs.syncfs(true, function (err) {
+                if (err) {
+                    reject();
+                }
+                else {
+                    resolve(1);
+                }
+            });
+        });
+    },
+    persistFs: async function () {
+        return new Promise((resolve, reject) => {
+            fs.syncfs(false, function (err) {
+                if (err) {
+                    resolve(false);
+                }
+                else {
+                    resolve(true);
+                }
+            });
+        });
+    },
+    startPeriodicFlush: function () {
+        if (periodicFlushIntervalId != -1) {
+            return;
+        }
+
+        periodicFlushIntervalId = setInterval(async () => {
+            await fsInterop.persistFs();
+        }, 5000);
+    },
+    stopPeriodicFlush: function () {
+        if (periodicFlushIntervalId !== -1) {
+            clearInterval(periodicFlushIntervalId);
+            periodicFlushIntervalId = -1;
+        }
+    }
+};
 
 export const databaseInterop = {
     fetch: function (url, data) {
@@ -732,7 +769,10 @@ export const geolocationInterop = {
 export const batteryInterop = {
     getBatteryStatus: async function () {
         if (!navigator.getBattery) {
-            return { success: false, error: "Battery API not supported in this browser" };
+            return JSON.stringify({
+                success: false,
+                error: "Battery API not supported in this browser"
+            });
         }
         const battery = await navigator.getBattery();
 
@@ -1101,7 +1141,6 @@ export const browserDetect = {
         var deviceModel = result.device.model ?? '';
         var deviceType = result.device.type ?? '';
 
-        console.log('Device model ->' + deviceModel);
         if (deviceModel === 'iPad' || isiPad) {
             deviceType = 'iPad';
             deviceModel = getModels().toString();

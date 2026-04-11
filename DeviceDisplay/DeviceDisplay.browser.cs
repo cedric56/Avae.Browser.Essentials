@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using Microsoft.Maui.Essentials;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
 namespace Microsoft.Maui.Devices
@@ -45,16 +46,16 @@ namespace Microsoft.Maui.Devices
         protected override DisplayInfo GetMainDisplayInfo()
         {
             var json = GetDeviceDisplayInfo();
-            var info = JsonSerializer.Deserialize<DeviceDisplayInfo>(json);
+            var info = JsonSerializer.Deserialize(json, AvaeJsonSerializerContext.Default.DeviceDisplayInfo);
             if(info == null)
                 return new DisplayInfo(0, 0, 1.0, DisplayOrientation.Portrait, DisplayRotation.Rotation0);
 
-            return new DisplayInfo(info.width, info.height, info.density,
-                info.isLandscape ? DisplayOrientation.Landscape : DisplayOrientation.Portrait,
-                info.rotation == 0 ? DisplayRotation.Rotation0 :
-                info.rotation == 90 ? DisplayRotation.Rotation90 :
-                info.rotation == 180 ? DisplayRotation.Rotation180 :
-                info.rotation == 270 ? DisplayRotation.Rotation270 : DisplayRotation.Unknown);
+            return new DisplayInfo(info.Width, info.Height, info.Density,
+                info.IsLandscape ? DisplayOrientation.Landscape : DisplayOrientation.Portrait,
+                info.Rotation == 0 ? DisplayRotation.Rotation0 :
+                info.Rotation == 90 ? DisplayRotation.Rotation90 :
+                info.Rotation == 180 ? DisplayRotation.Rotation180 :
+                info.Rotation == 270 ? DisplayRotation.Rotation270 : DisplayRotation.Unknown);
 
         }
 
@@ -66,15 +67,6 @@ namespace Microsoft.Maui.Devices
         protected override void StopScreenMetricsListeners()
         {
 
-        }
-
-        public class DeviceDisplayInfo
-        {
-            public double width { get; set; }
-            public double height { get; set; }
-            public bool isLandscape { get; set; }
-            public double density { get; set; } // Device Pixel Ratio
-            public int rotation { get; set; } // Screen Rotation Angle (0, 90, 180, 270)
         }
     }
 }

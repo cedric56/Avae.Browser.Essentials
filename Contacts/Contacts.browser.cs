@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using Microsoft.Maui.Essentials;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
 namespace Microsoft.Maui.ApplicationModel.Communication
@@ -26,31 +27,26 @@ namespace Microsoft.Maui.ApplicationModel.Communication
             {
                 var contacts = new List<Contact>();
 
-                //var results = JsonConvert.DeserializeObject<List<Root>>(result);
-                var results = JsonSerializer.Deserialize<List<Root>>(result);
+                var results = JsonSerializer.Deserialize(result, AvaeJsonSerializerContext.Default.ListContactsResponseInterop);
 
-                
-                foreach (var item in results ?? [])
+                if (results is null)
+                {
+                    return contacts;
+                }
+
+                foreach (var item in results)
                 {
                     var contact = new Contact()
                     {
-                        GivenName = item.name.FirstOrDefault(),
-                        Emails = [.. item.email.Select(e => new ContactEmail { EmailAddress = e })],
-                        Phones = [.. item.tel.Select(e => new ContactPhone { PhoneNumber = e })],
+                        GivenName = item.Name?.FirstOrDefault() ?? string.Empty,
+                        Emails = item.Email?.Select(e => new ContactEmail { EmailAddress = e }).ToList() ?? [],
+                        Phones = item.Tel?.Select(e => new ContactPhone { PhoneNumber = e }).ToList() ?? [],
                     };
                     contacts.Add(contact);
                 }
                 return contacts;
             }
             return [];
-        }
-
-        public class Root
-        {
-            public List<string> name { get; set; }
-            public List<string> email { get; set; }            
-            public List<string> tel { get; set; }
-            public List<string> address { get; set; }
         }
     }
 }

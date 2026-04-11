@@ -52,11 +52,18 @@ namespace Microsoft.Maui.Networking
             {
                 var networkType = GetConnectionType();
                 if (Enum.TryParse(networkType, true, out ConnectionProfile profile))
+                {
                     profiles.Add(profile);
+                }
                 else if (!string.IsNullOrEmpty(networkType))
+                {
                     profiles.Add(ConnectionProfile.Cellular);
+                }
             }
-            if (profiles.Count == 0) profiles.Add(ConnectionProfile.Unknown);
+            if (profiles.Count == 0)
+            {
+                profiles.Add(ConnectionProfile.Unknown);
+            }
             ConnectionProfiles = profiles;
         }
     }

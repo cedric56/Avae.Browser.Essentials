@@ -18,34 +18,34 @@ namespace Microsoft.Maui.Storage
         public static partial void ClearPreferences();
 
 
-        public bool ContainsKey(string key, string sharedName)
+        public bool ContainsKey(string key, string? sharedName)
         {
             return !string.IsNullOrEmpty(GetItem(key));
         }
 
-        public void Remove(string key, string sharedName)
+        public void Remove(string key, string? sharedName)
         {
             RemoveItem(key);
         }
 
-        public void Clear(string sharedName)
+        public void Clear(string? sharedName)
         {
             ClearPreferences();
         }
 
-        public void Set<T>(string key, T value, string sharedName)
+        public void Set<T>(string key, T value, string? sharedName)
         {
             //Preferences.CheckIsSupportedType<T>();
 
             SetItem(key, JsonSerializer.Serialize(value));
         }
 
-        public T Get<T>(string key, T defaultValue, string sharedName)
+        public T Get<T>(string key, T defaultValue, string? sharedName)
         {
             var value = GetItem(key);
             if (value == null)
                 return defaultValue;
-            return JsonSerializer.Deserialize<T>(value);
+            return JsonSerializer.Deserialize<T>(value)!;
         }
     }
 }

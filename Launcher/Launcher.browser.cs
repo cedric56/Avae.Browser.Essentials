@@ -11,12 +11,12 @@ namespace Microsoft.Maui.ApplicationModel
             OpenAsync(uri.OriginalString);
 
         Task<bool> PlatformTryOpenAsync(Uri uri) =>
-           Task.FromResult(true);
+            OpenAsync(uri.OriginalString);
 
         Task<bool> PlatformOpenAsync(OpenFileRequest request) =>
-            OpenAsync(request.File.FullPath);
+            OpenAsync(request.File!.FullPath);
 
-        private Task<bool> OpenAsync(string url)
+        private static Task<bool> OpenAsync(string url)
         {
             bool result = false;
             try
