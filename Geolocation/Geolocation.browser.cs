@@ -10,10 +10,19 @@ namespace Microsoft.Maui.Devices.Sensors
         [JSImport("geolocationInterop.getCurrentLocation", "essentials")]
         public static partial Task<string> GetCurrentLocation();
 
+        [JSImport("geolocationInterop.startLocationReading", "essentials")]
+        internal static partial int StartLocationReadingInterop([JSMarshalAs<JSType.Function<JSType.Number, JSType.Number>>] Action<double, double> onSuccess
+            , [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<int, string> onError, bool highAccuracy = false);
+
+        [JSImport("geolocationInterop.stopLocationReading", "essentials")]
+        internal static partial void StopLocationReadingInterop([JSMarshalAs<JSType.Number>] int id);
+
         /// <summary>
         /// Indicates if currently listening to location updates while the app is in foreground.
         /// </summary>
-        public bool IsListeningForeground { get; set; }
+        public bool IsListeningForeground => watchingId != -1;
+
+        int watchingId = -1;
 
         public async Task<Location?> GetLastKnownLocationAsync()
         {
@@ -73,7 +82,7 @@ namespace Microsoft.Maui.Devices.Sensors
             if (IsListeningForeground)
                 throw new InvalidOperationException("Already listening to location changes.");
 
-            IsListeningForeground = true;
+            watchingId = StartLocationReadingInterop(OnSuccessInterop, OnErrorInterop);
 
             return Task.FromResult(true);
         }
@@ -85,7 +94,26 @@ namespace Microsoft.Maui.Devices.Sensors
         /// </summary>
         public void StopListeningForeground()
         {
-            IsListeningForeground = false;
+            StopLocationReadingInterop(watchingId);
+            watchingId = -1;
+        }
+
+        void OnSuccessInterop(double lat, double lng)
+        {
+            OnLocationChanged(new Location(lat, lng));
+        }
+
+        void OnErrorInterop(int code, string message)
+        {
+            if (code == 1)
+            {
+                OnLocationError(GeolocationError.Unauthorized);
+            }
+            else
+            {
+                OnLocationError(GeolocationError.PositionUnavailable);
+            }
+            StopListeningForeground();
         }
     }
 }
