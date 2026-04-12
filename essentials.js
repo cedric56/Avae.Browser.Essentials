@@ -729,7 +729,6 @@ export const orientationInterop = {
 
 export const geolocationInterop = {
     getCurrentLocation: async function () {
-
         return new Promise((resolve, reject) => {
             // Check if geolocation is available
             if ("geolocation" in navigator) {
@@ -761,8 +760,22 @@ export const geolocationInterop = {
                 }));
             }
         });
+    },
+    startLocationReading: function (successFunc, errFunc, highAccuracy) {
+        const options = {
+            enableHighAccuracy: highAccuracy,
+            timeout: Infinity,
+            maximumAge: 0
+        };
 
-
+        return navigator.geolocation.watchPosition((pos) => {
+            successFunc(JSON.stringify(pos.coords.toJSON()));
+        }, (err) => {
+            errFunc(err.code, err.message);
+        }, options);
+    },
+    stopLocationReading: function (watchingId) {
+        navigator.geolocation.clearWatch(watchingId);
     }
 };
 

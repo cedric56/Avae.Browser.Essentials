@@ -10,10 +10,21 @@ namespace Microsoft.Maui.Devices.Sensors
         [JSImport("geolocationInterop.getCurrentLocation", "essentials")]
         public static partial Task<string> GetCurrentLocation();
 
+        [JSImport("geolocationInterop.startLocationReading", "essentials")]
+        internal static partial int StartLocationReadingInterop(
+            [JSMarshalAs<JSType.Function<JSType.String>>] Action<string> onSuccess
+            , [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<short, string> onError
+            , bool highAccuracy = false);
+
+        [JSImport("geolocationInterop.stopLocationReading", "essentials")]
+        internal static partial void StopLocationReadingInterop([JSMarshalAs<JSType.Number>] int id);
+
         /// <summary>
         /// Indicates if currently listening to location updates while the app is in foreground.
         /// </summary>
-        public bool IsListeningForeground { get; set; }
+        public bool IsListeningForeground => watchingId != -1;
+
+        int watchingId = -1;
 
         public async Task<Location?> GetLastKnownLocationAsync()
         {
@@ -73,7 +84,7 @@ namespace Microsoft.Maui.Devices.Sensors
             if (IsListeningForeground)
                 throw new InvalidOperationException("Already listening to location changes.");
 
-            IsListeningForeground = true;
+            watchingId = StartLocationReadingInterop(OnSuccessInterop, OnErrorInterop, request.DesiredAccuracy is GeolocationAccuracy.High or GeolocationAccuracy.Best);
 
             return Task.FromResult(true);
         }
@@ -85,7 +96,39 @@ namespace Microsoft.Maui.Devices.Sensors
         /// </summary>
         public void StopListeningForeground()
         {
-            IsListeningForeground = false;
+            StopLocationReadingInterop(watchingId);
+            watchingId = -1;
+        }
+
+        void OnSuccessInterop(string jsonData)
+        {
+            var result = JsonSerializer.Deserialize(jsonData, AvaeJsonSerializerContext.Default.GeolocationReadingResultInterop);
+
+            if (result is null)
+            {
+                return;
+            }
+
+            OnLocationChanged(new Location(result.Latitude, result.Longitude)
+            {
+                Altitude = result.Altitude,
+                Accuracy = result.Accuracy,
+                Speed = result.Speed,
+                Course = result.Course
+            });
+        }
+
+        void OnErrorInterop(short code, string message)
+        {
+            if (code == 1)
+            {
+                OnLocationError(GeolocationError.Unauthorized);
+            }
+            else
+            {
+                OnLocationError(GeolocationError.PositionUnavailable);
+            }
+            StopListeningForeground();
         }
     }
 }
