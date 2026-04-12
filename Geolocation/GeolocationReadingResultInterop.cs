@@ -2,7 +2,6 @@
 
 namespace Microsoft.Maui.Devices.Sensors
 {
-    // {"timestamp":1775912506229,"coords":{"accuracy":103,"latitude":43.34419819928297,"longitude":132.1563795,"altitude":null,"altitudeAccuracy":null,"heading":null,"speed":null}}
     internal class GeolocationReadingResultInterop
     {
         [JsonPropertyName("latitude")]
